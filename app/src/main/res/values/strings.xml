@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">CoronaTracker</string>
+
+
+    <string name="latest_data">最新数据</string>
+    <string name="information">消息</string>
+    <string name="about">关于</string>
+
+    <string name="latest_time">截止%1$s</string>
+
+    <string name="confirmed_count">累计确诊</string>
+    <string name="cured_count">累计治愈</string>
+    <string name="death_count">累计死亡</string>
+
+    <string name="cur_confirmed_count">现有确诊</string>
+
+    <string name="increase_count">较上日</string>
+
+    <string name="number">%1$d</string>
+    <string name="increase_number">+%1$d</string>
+    <string name="news">新闻</string>
+    <string name="rumors">谣言</string>
+
+    <string name="date">%1$d年%2$d月%3$d日</string>
+
 </resources>

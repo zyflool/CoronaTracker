@@ -7,18 +7,21 @@ import com.zyflool.coronatracker.net.OverallResultResponse;
 
 public class CoronaData {
 
-    private String time;
     private int currentConfirmedCount;   //现存确诊人数
     private int confirmedCount;      //累计确诊人数
     private int curedCount;        //累计治愈人数
     private int deadCount;        //累计死亡人数
+    private int importedCount;        //境外输入
+    private int asymptomaticCount;        //累计无症状人数
     private int currentConfirmedIncr;    //现存确诊人数较昨日增加量
     private int confirmedIncr;            //累计确诊人数较昨日增加量
     private int curedIncr;              //累计治愈人数较昨日增加量
     private int deadIncr;              //累计死亡人数较昨日增加量
+    private int importedIncr;          //境外输入较昨日增加量
+    private int asymptomaticIncr;      //累计无症状人数较昨日增加量
 
-    public CoronaData(String time, int currentConfirmedCount, int confirmedCount, int curedCount, int deadCount, int currentConfirmedIncr, int confirmedIncr, int curedIncr, int deadIncr) {
-        this.time = time;
+    public CoronaData(int currentConfirmedCount, int confirmedCount, int curedCount, int deadCount, int currentConfirmedIncr, int confirmedIncr, int curedIncr, int deadIncr) {
+
         this.currentConfirmedCount = currentConfirmedCount;
         this.confirmedCount = confirmedCount;
         this.curedCount = curedCount;
@@ -29,17 +32,19 @@ public class CoronaData {
         this.deadIncr = deadIncr;
     }
 
-    public CoronaData(OverallResultResponse.ResultsBean bean) {
-        this.time = bean.getUpdateTime()+"";
-        OverallResultResponse.ResultsBean.GlobalStatisticsBean Gbean = bean.getGlobalStatistics();
-        this.currentConfirmedCount = Gbean.getCurrentConfirmedCount();
-        this.confirmedCount = Gbean.getConfirmedCount();
-        this.curedCount = Gbean.getCuredCount();
-        this.deadCount = Gbean.getDeadCount();
-        this.currentConfirmedIncr = Gbean.getCurrentConfirmedIncr();
-        this.confirmedIncr = Gbean.getConfirmedIncr();
-        this.curedIncr = Gbean.getCuredIncr();
-        this.deadIncr = Gbean.getDeadIncr();
+    public CoronaData(int currentConfirmedCount, int confirmedCount, int curedCount, int deadCount, int importedCount, int asymptomaticCount, int currentConfirmedIncr, int confirmedIncr, int curedIncr, int deadIncr, int importedIncr, int asymptomaticIncr) {
+        this.currentConfirmedCount = currentConfirmedCount;
+        this.confirmedCount = confirmedCount;
+        this.curedCount = curedCount;
+        this.deadCount = deadCount;
+        this.importedCount = importedCount;
+        this.asymptomaticCount = asymptomaticCount;
+        this.currentConfirmedIncr = currentConfirmedIncr;
+        this.confirmedIncr = confirmedIncr;
+        this.curedIncr = curedIncr;
+        this.deadIncr = deadIncr;
+        this.importedIncr = importedIncr;
+        this.asymptomaticIncr = asymptomaticIncr;
     }
 
     public int getCurrentConfirmedCount() {
@@ -106,12 +111,35 @@ public class CoronaData {
         this.deadIncr = deadIncr;
     }
 
-    public String getTime() {
-        return time;
+    public int getImportedCount() {
+        return importedCount;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setImportedCount(int importedCount) {
+        this.importedCount = importedCount;
     }
 
+    public int getAsymptomaticCount() {
+        return asymptomaticCount;
+    }
+
+    public void setAsymptomaticCount(int asymptomaticCount) {
+        this.asymptomaticCount = asymptomaticCount;
+    }
+
+    public int getImportedIncr() {
+        return importedIncr;
+    }
+
+    public void setImportedIncr(int importedIncr) {
+        this.importedIncr = importedIncr;
+    }
+
+    public int getAsymptomaticIncr() {
+        return asymptomaticIncr;
+    }
+
+    public void setAsymptomaticIncr(int asymptomaticIncr) {
+        this.asymptomaticIncr = asymptomaticIncr;
+    }
 }

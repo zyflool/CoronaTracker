@@ -7,5 +7,5 @@
     <solid
         android:color="@color/deathBackColor"/>
     <corners
-        android:bottomRightRadius="8dp"/>
+        android:bottomLeftRadius="10dp"/>
 </shape>

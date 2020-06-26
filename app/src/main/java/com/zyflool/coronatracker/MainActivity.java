@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         MainFl = findViewById(R.id.fl_main);
 
-        getSupportFragmentManager().beginTransaction().add(R.id.fl_main, HomeFragment.newInstance()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fl_main, new HomeFragment()).commit();
 
     }
 

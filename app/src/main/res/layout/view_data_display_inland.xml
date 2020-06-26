@@ -7,34 +7,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/tv_latest_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/latest_time"
-        android:textColor="@android:color/black"
-        android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_conversion_absoluteHeight="23dp"
-        tools:layout_conversion_absoluteWidth="78dp" />
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_cur_confirmed_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/cur_confirmed_count_background"
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
-        app:layout_constraintEnd_toStartOf="@+id/cl_confirmed_count"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cl_confirmed_count"
-        tools:layout_conversion_absoluteHeight="76dp"
-        tools:layout_conversion_absoluteWidth="104dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_cur_confirmed_count_increase"
@@ -96,17 +77,156 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_imported_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/inland_imported_count_background"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        app:layout_constraintStart_toEndOf="@+id/cl_cur_confirmed_count"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_imported_count_increase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/increase_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="42dp"
+            tools:layout_editor_absoluteX="106dp"
+            tools:layout_editor_absoluteY="33dp" />
+
+        <TextView
+            android:id="@+id/tv_imported_count_increase_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/increase_number"
+            android:textColor="@color/importedTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_imported_count_increase"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="42dp"
+            tools:layout_editor_absoluteX="149dp"
+            tools:layout_editor_absoluteY="33dp" />
+
+        <TextView
+            android:id="@+id/tv_imported_count_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/number"
+            android:textColor="@color/importedTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_imported_count_increase_number"
+            tools:layout_conversion_absoluteHeight="27dp"
+            tools:layout_conversion_absoluteWidth="49dp"
+            tools:layout_editor_absoluteX="124dp"
+            tools:layout_editor_absoluteY="52dp" />
+
+        <TextView
+            android:id="@+id/tv_imported_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/imported_count"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_imported_count_number"
+            tools:layout_conversion_absoluteHeight="20dp"
+            tools:layout_conversion_absoluteWidth="59dp"
+            tools:layout_editor_absoluteX="119dp"
+            tools:layout_editor_absoluteY="79dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_asymptomatic_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/asymptomatic_count_background"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        app:layout_constraintStart_toEndOf="@+id/cl_imported_count"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_asymptomatic_count_increase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/increase_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="42dp"
+            tools:layout_editor_absoluteX="106dp"
+            tools:layout_editor_absoluteY="33dp" />
+
+        <TextView
+            android:id="@+id/tv_asymptomatic_count_increase_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/increase_number"
+            android:textColor="@color/asymptomaticTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_asymptomatic_count_increase"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="42dp"
+            tools:layout_editor_absoluteX="149dp"
+            tools:layout_editor_absoluteY="33dp" />
+
+        <TextView
+            android:id="@+id/tv_asymptomatic_count_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/number"
+            android:textColor="@color/asymptomaticTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_asymptomatic_count_increase_number"
+            tools:layout_conversion_absoluteHeight="27dp"
+            tools:layout_conversion_absoluteWidth="49dp"
+            tools:layout_editor_absoluteX="124dp"
+            tools:layout_editor_absoluteY="52dp" />
+
+        <TextView
+            android:id="@+id/tv_asymptomatic_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/asymptomatic_count"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_asymptomatic_count_number"
+            tools:layout_conversion_absoluteHeight="20dp"
+            tools:layout_conversion_absoluteWidth="59dp"
+            tools:layout_editor_absoluteX="119dp"
+            tools:layout_editor_absoluteY="79dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_confirmed_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@drawable/confirmed_count_background"
+        android:background="@drawable/inland_confirmed_count_background"
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_latest_time"
-        tools:layout_conversion_absoluteHeight="76dp"
-        tools:layout_conversion_absoluteWidth="104dp">
+        app:layout_constraintEnd_toEndOf="@+id/cl_cur_confirmed_count"
+        app:layout_constraintStart_toStartOf="@id/cl_cur_confirmed_count"
+        app:layout_constraintTop_toBottomOf="@+id/cl_cur_confirmed_count">
 
         <TextView
             android:id="@+id/tv_confirmed_count_increase"
@@ -171,15 +291,12 @@
         android:id="@+id/cl_cured_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/cured_count_background"
+        android:background="@drawable/inland_cured_count_background"
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/cl_cur_confirmed_count"
-        app:layout_constraintStart_toStartOf="@+id/cl_cur_confirmed_count"
-        app:layout_constraintTop_toBottomOf="@+id/cl_cur_confirmed_count"
-        tools:layout_conversion_absoluteHeight="76dp"
-        tools:layout_conversion_absoluteWidth="104dp">
+        app:layout_constraintEnd_toEndOf="@+id/cl_asymptomatic_count"
+        app:layout_constraintStart_toStartOf="@+id/cl_asymptomatic_count"
+        app:layout_constraintTop_toTopOf="@+id/cl_death_count">
 
         <TextView
             android:id="@+id/tv_cured_count_increase"
@@ -244,15 +361,12 @@
         android:id="@+id/cl_death_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/death_count_background"
+        android:background="@drawable/inland_death_count_background"
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/cl_confirmed_count"
-        app:layout_constraintStart_toStartOf="@+id/cl_confirmed_count"
-        app:layout_constraintTop_toBottomOf="@+id/cl_confirmed_count"
-        tools:layout_conversion_absoluteHeight="76dp"
-        tools:layout_conversion_absoluteWidth="104dp">
+        app:layout_constraintEnd_toEndOf="@+id/cl_imported_count"
+        app:layout_constraintStart_toStartOf="@+id/cl_imported_count"
+        app:layout_constraintTop_toTopOf="@+id/cl_confirmed_count">
 
         <TextView
             android:id="@+id/tv_death_count_increase"

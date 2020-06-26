@@ -17,7 +17,7 @@ public interface Service {
     Observable<OverallResultResponse> getOverAll();
 
     @GET("api/area")
-    Observable<AreaResultResponse> getArea(@Query("country") String country, @Query("province") String province);
+    Observable<AreaResultResponse> getArea(@Query("country") String country, @Query("province") String province, @Query("sort") String sort);
 
     //province 为空
     @GET("api/news")

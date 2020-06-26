@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.zyflool.coronatracker.R;
 import com.zyflool.coronatracker.ui.info.InfoFragment;
@@ -24,16 +25,8 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private static HomeFragment Instance = new HomeFragment();
-
     private NoScrollViewPager DataVp;
     private BottomNavigationView BottomNav;
-
-    private  HomeFragment() { }
-
-    public static HomeFragment newInstance () {
-        return Instance;
-    }
 
     @Nullable
     @Override
@@ -61,12 +54,9 @@ public class HomeFragment extends Fragment {
     public void setNavigation() {
 
 
-        BottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switchMenu(item);
-                return true;
-            }
+        BottomNav.setOnNavigationItemSelectedListener(item -> {
+            switchMenu(item);
+            return true;
         });
 
 
@@ -113,7 +103,7 @@ public class HomeFragment extends Fragment {
             super(fragmentManager);
             // 加载初始化Fragment
             mFragments.add(new DataFragment());
-            mFragments.add(InfoFragment.newInstance());
+            mFragments.add(new InfoFragment());
         }
 
         @Override

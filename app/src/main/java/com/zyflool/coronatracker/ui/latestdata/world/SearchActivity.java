@@ -5,10 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +26,6 @@ import java.util.List;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class SearchActivity extends AppCompatActivity {
@@ -52,6 +48,9 @@ public class SearchActivity extends AppCompatActivity {
         mSv = findViewById(R.id.sv_search);
         mRv = findViewById(R.id.rv_search);
         mDdv = findViewById(R.id.ddv_search);
+
+        mDdv.setFabListener(v -> getData(mSv.getQuery().toString()));
+
         mDdv.setVisibility(View.GONE);
 
         mAdapter = new SearchAdapter(new ArrayList<>());
@@ -151,51 +150,43 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setDdv (boolean ifVis, String result) {
-        if ( ifVis ) {
-            NetUtil.getInstance().getApi().getArea(result, "")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map(new Function<AreaResultResponse, List<AreaResultResponse.ResultsBean>>() {
-                        @Override
-                        public List<AreaResultResponse.ResultsBean> apply(AreaResultResponse areaResultResponse) throws Exception {
-                            return areaResultResponse.getResults();
-                        }
-                    })
-                    .subscribe(new Observer<List<AreaResultResponse.ResultsBean>>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(List<AreaResultResponse.ResultsBean> resultsBeans) {
-                            mDdv.setVisibility(View.VISIBLE);
-                            mDdv.setData(resultsBeans.get(0).getUpdateTime()+"",
-                                    resultsBeans.get(0).getCurrentConfirmedCount(),
-                                    resultsBeans.get(0).getConfirmedCount(),
-                                    resultsBeans.get(0).getCuredCount(),
-                                    resultsBeans.get(0).getDeadCount());
-                            mSv.setFocusable(false);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                            Log.e("SearchActivity", "get Remote Area Data Fail");
-                            showError("获取数据失败，请检查网络或稍后重试");
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-        } else {
+        if ( ifVis )
+            getData(result);
+        else
             mDdv.setVisibility(View.GONE);
-        }
     }
 
-    public void showError(String error) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    private void getData(String result) {
+        NetUtil.getInstance().getApi().getArea(result, "", "currentConfirmedCount")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(AreaResultResponse::getResults)
+                .subscribe(new Observer<List<AreaResultResponse.ResultsBean>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AreaResultResponse.ResultsBean> resultsBeans) {
+                        mDdv.setVisibility(View.VISIBLE);
+                        mDdv.setData(resultsBeans.get(0).getCurrentConfirmedCount(),
+                                resultsBeans.get(0).getConfirmedCount(),
+                                resultsBeans.get(0).getCuredCount(),
+                                resultsBeans.get(0).getDeadCount());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mDdv.setVisibility(View.VISIBLE);
+                        e.printStackTrace();
+                        Log.e("SearchActivity", "get Remote Area Data Fail");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

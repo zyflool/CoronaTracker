@@ -18,16 +18,8 @@ import com.zyflool.coronatracker.ui.info.rumors.RumorsFragment;
 
 public class InfoFragment extends Fragment {
 
-    private static InfoFragment Instance = new InfoFragment();
-
     private TabLayout mInfoTl;
     private ViewPager mInfoVp;
-
-    private  InfoFragment() { }
-
-    public static InfoFragment newInstance () {
-        return Instance;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -5,11 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.zyflool.coronatracker.R;
 import com.zyflool.coronatracker.data.Rumors;
-import com.zyflool.coronatracker.util.AppExecutors;
+import com.zyflool.coronatracker.util.ListNoItemViewHolder;
 import com.zyflool.coronatracker.util.MyRefreshLayout;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
     public void showRumors(List<Rumors> rumorsList) {
         myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
-        Log.e("zhongyifan","getRumors finish");
+        Log.e("RumorsFragment","getRumors finish");
         if ( rumorsList.size() < 20 )
             myRefreshLayout.setOnLoadMoreListener(null);
         mAdapter.refreshRumors(rumorsList);
@@ -94,10 +95,9 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
     public void showError(String error) {
         myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
-        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
-    public class RumorsAdapter extends RecyclerView.Adapter<RumorsAdapter.RumorsViewHolder> {
+    public class RumorsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private List<Rumors> mRumorsList;
 
@@ -119,25 +119,58 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
 
         @NonNull
         @Override
-        public RumorsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new RumorsViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_rumors, parent, false));
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if ( viewType == 1 )
+                return new ListNoItemViewHolder(
+                        LayoutInflater.from(getContext()).inflate(
+                                R.layout.item_no_item, parent, false));
+            else
+                return new RumorsViewHolder(
+                        LayoutInflater.from(getContext()).inflate(
+                                R.layout.item_rumors, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final RumorsViewHolder holder, final int position) {
-            holder.mSummaryTv.setText(mRumorsList.get(position).getMainSummary());
-            holder.mTitleTv.setText(mRumorsList.get(position).getTitle());
+        public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+            if ( holder instanceof RumorsViewHolder ) {
+                RumorsViewHolder mHolder = (RumorsViewHolder) holder;
+                mHolder.mSummaryTv.setText(mRumorsList.get(position).getMainSummary());
+                mHolder.mTitleTv.setText(mRumorsList.get(position).getTitle());
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
+                mHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage(mRumorsList.get(position).getBody());
+
+                        builder.setCancelable(true);
+
+                        AlertDialog dialog = builder.create();
+
+                        final Window window = dialog.getWindow();
+                        assert window != null;
+                        window.setBackgroundDrawable(getResources().getDrawable(R.drawable.dialog_bg, null));
+
+                        dialog.show();
+
+                    }
+                });
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if ( mRumorsList.size() == 0 )
+                return 1;
+            else return 0;
         }
 
         @Override
         public int getItemCount() {
-            return mRumorsList.size();
+            if ( mRumorsList.size() == 0 )
+                return 1;
+            else
+                return mRumorsList.size();
         }
 
         public class RumorsViewHolder extends RecyclerView.ViewHolder {

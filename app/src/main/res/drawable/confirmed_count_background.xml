@@ -7,5 +7,5 @@
     <solid
         android:color="@color/confirmedBackColor"/>
     <corners
-        android:topRightRadius="8dp"/>
+        android:topRightRadius="10dp"/>
 </shape>

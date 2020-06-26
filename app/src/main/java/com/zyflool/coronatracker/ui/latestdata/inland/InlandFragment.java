@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,18 +15,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zyflool.coronatracker.R;
 import com.zyflool.coronatracker.data.CoronaData;
 import com.zyflool.coronatracker.net.NetUtil;
 import com.zyflool.coronatracker.net.OverallResultResponse;
-import com.zyflool.coronatracker.ui.info.InfoFragment;
 import com.zyflool.coronatracker.ui.latestdata.sortrecyclerview.PinyinComparator;
 import com.zyflool.coronatracker.ui.latestdata.sortrecyclerview.SideBar;
 import com.zyflool.coronatracker.ui.latestdata.sortrecyclerview.SortAdapter;
 import com.zyflool.coronatracker.ui.latestdata.sortrecyclerview.SortModel;
 import com.zyflool.coronatracker.util.Constants;
-import com.zyflool.coronatracker.util.DataDisplayView;
+import com.zyflool.coronatracker.util.InlandDataDisplayView;
 import com.zyflool.coronatracker.util.SPUtils;
 
 import java.util.ArrayList;
@@ -43,8 +41,8 @@ public class InlandFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private SideBar sideBar;
     private TextView dialog;
-    private DataDisplayView mDdv;
-    private FloatingActionButton mFab;
+    private InlandDataDisplayView mDdv;
+    private ImageButton mIb;
 
     private SPUtils spUtils;
 
@@ -83,8 +81,8 @@ public class InlandFragment extends Fragment {
         sideBar = v.findViewById(R.id.sb_inland);
         dialog = v.findViewById(R.id.tv_inland_dialog);
         mDdv = v.findViewById(R.id.ddv_inland);
-        mFab = v.findViewById(R.id.fab_inland);
-        mFab.setOnClickListener(view -> getRemoteOverall());
+        mIb = v.findViewById(R.id.ib_inland);
+        mIb.setOnClickListener(view -> getRemoteOverall());
         sideBar.setTextView(dialog);
 
         //设置右侧SideBar触摸监听
@@ -149,20 +147,26 @@ public class InlandFragment extends Fragment {
 
 
     private void initData() {
-        if ( spUtils.getString("updateTime","").length() == 0 )
+        if ( spUtils.getInt("InlandCurrentConfirmedCount",0) == 0 )
             getRemoteOverall();
-        else
+        else {
             mDdv.setData(
-                    new CoronaData(spUtils.getString("updateTime"),
+                    new CoronaData(
                             spUtils.getInt("InlandCurrentConfirmedCount"),
                             spUtils.getInt("InlandConfirmedCount"),
                             spUtils.getInt("InlandCuredCount"),
                             spUtils.getInt("InlandDeadCount"),
+                            spUtils.getInt("InlandImportedCount"),
+                            spUtils.getInt("InlandAsymptomaticCount"),
                             spUtils.getInt("InlandCurrentConfirmedIncr"),
                             spUtils.getInt("InlandConfirmedIncr"),
                             spUtils.getInt("InlandCuredIncr"),
-                            spUtils.getInt("InlandDeadIncr")
+                            spUtils.getInt("InlandDeadIncr"),
+                            spUtils.getInt("InlandImportedIncr"),
+                            spUtils.getInt("InlandAsymptomaticIncr")
                     ));
+            Log.e("InlandFragment", "set Data");
+        }
     }
 
     private void getRemoteOverall() {
@@ -186,24 +190,41 @@ public class InlandFragment extends Fragment {
                         spUtils.put("InlandConfirmedCount", t.getConfirmedCount());
                         spUtils.put("InlandCuredCount",t.getCuredCount());
                         spUtils.put("InlandDeadCount", t.getDeadCount());
+                        spUtils.put("InlandImportedCount", t.getSuspectedCount());
+                        spUtils.put("InlandAsymptomaticCount", t.getSeriousCount());
 
                         spUtils.put("InlandCurrentConfirmedIncr", t.getCurrentConfirmedIncr());
                         spUtils.put("InlandConfirmedIncr", t.getConfirmedIncr());
                         spUtils.put("InlandCuredIncr", t.getCuredIncr());
                         spUtils.put("InlandDeadIncr", t.getDeadIncr());
+                        spUtils.put("InlandImportedIncr", t.getSuspectedIncr());
+                        spUtils.put("InlandAsymptomaticIncr", t.getSeriousIncr());
 
-                        mDdv.setData(new CoronaData(t.getUpdateTime()+"",
+                        spUtils.put("WorldCurrentConfirmedCount", t.getGlobalStatistics().getCurrentConfirmedCount());
+                        spUtils.put("WorldConfirmedCount", t.getGlobalStatistics().getConfirmedCount());
+                        spUtils.put("WorldCuredCount",t.getGlobalStatistics().getCuredCount());
+                        spUtils.put("WorldDeadCount", t.getGlobalStatistics().getDeadCount());
+
+                        spUtils.put("WorldCurrentConfirmedIncr", t.getGlobalStatistics().getCurrentConfirmedIncr());
+                        spUtils.put("WorldConfirmedIncr", t.getGlobalStatistics().getConfirmedIncr());
+                        spUtils.put("WorldCuredIncr", t.getGlobalStatistics().getCuredIncr());
+                        spUtils.put("WorldDeadIncr", t.getGlobalStatistics().getDeadIncr());
+
+                        mDdv.setData(new CoronaData(
                                 t.getCurrentConfirmedCount(), t.getConfirmedCount(),
                                 t.getCuredCount(), t.getDeadCount(),
+                                t.getSuspectedCount(), t.getSeriousCount(),
                                 t.getCurrentConfirmedIncr(), t.getConfirmedIncr(),
-                                t.getCuredIncr(), t.getDeadIncr()));
+                                t.getCuredIncr(), t.getDeadIncr(),
+                                t.getSuspectedIncr(), t.getSeriousIncr()));
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         Log.e("inlandFragment","data fail");
-                        showError("获取数据失败，请检查网络或稍后重试");
+
                     }
 
                     @Override
@@ -211,10 +232,6 @@ public class InlandFragment extends Fragment {
 
                     }
                 });
-    }
-
-    public void showError(String error) {
-        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
 }

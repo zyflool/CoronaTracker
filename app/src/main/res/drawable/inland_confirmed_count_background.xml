@@ -5,7 +5,7 @@
         android:width="60dp"
         android:height="50dp" />
     <solid
-        android:color="@color/curedBackColor"/>
+        android:color="@color/confirmedBackColor"/>
     <corners
-        android:bottomRightRadius="10dp"/>
+        android:bottomLeftRadius="10dp"/>
 </shape>

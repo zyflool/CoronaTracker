@@ -29,6 +29,7 @@ public class ProvincePresenter implements ProvinceContract.ProvincePresenter {
     @Override
     public void getData(String LocationEng) {
         mRepository.getLocationData(source, LocationEng, timelines)
+                .retry(10)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseBody>() {
                     @Override

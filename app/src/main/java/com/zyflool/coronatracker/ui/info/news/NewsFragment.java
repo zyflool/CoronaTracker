@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.zyflool.coronatracker.R;
 import com.zyflool.coronatracker.data.News;
-import com.zyflool.coronatracker.util.AppExecutors;
+import com.zyflool.coronatracker.util.ListNoItemViewHolder;
 import com.zyflool.coronatracker.util.MyRefreshLayout;
 import com.zyflool.coronatracker.util.Utils;
 
@@ -79,7 +79,7 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
 
     @Override
     public void showNews(List<News> newsList) {
-        Log.e("zhongyifan","getRumors finish");
+        Log.e("NewsFragment","getRumors finish");
         myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
         if ( newsList.size() < 20 )
@@ -100,10 +100,9 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
     public void showError(String error) {
         myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
-        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
-    public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
+    public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private List<News> mNewsList;
 
@@ -125,61 +124,82 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
 
         @NonNull
         @Override
-        public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new NewsViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_news, parent, false));
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if ( viewType == 1 )
+                return new ListNoItemViewHolder(
+                        LayoutInflater.from(getContext()).inflate(
+                                R.layout.item_news, parent, false));
+            else
+                return new NewsViewHolder(
+                        LayoutInflater.from(getContext()).inflate(
+                                R.layout.item_news, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final NewsViewHolder holder, final int position) {
-            holder.mSourceTv.setText(mNewsList.get(position).getInfoSource());
-            holder.mSummaryTv.setText(mNewsList.get(position).getSummary());
-            holder.mTitleTv.setText(mNewsList.get(position).getTitle());
-            String time = mNewsList.get(position).getPubDate();
-            time = time.substring(0, time.length()-3);
-            holder.mTimeTv.setText(Utils.paserTime(Long.parseLong(time)).substring(0,10));
+        public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+            if ( holder instanceof NewsViewHolder ) {
+                NewsViewHolder mHolder = (NewsViewHolder) holder;
+                mHolder.mSourceTv.setText(mNewsList.get(position).getInfoSource());
+                mHolder.mSummaryTv.setText(mNewsList.get(position).getSummary());
+                mHolder.mTitleTv.setText(mNewsList.get(position).getTitle());
+                String time = mNewsList.get(position).getPubDate();
+                time = time.substring(0, time.length() - 3);
+                mHolder.mTimeTv.setText(Utils.paserTime(Long.parseLong(time)).substring(0, 10));
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage("即将打开手机上的浏览器查看新闻详细内容，请问您确认要打开浏览器吗？");
-                    //点击对话框以外的区域是否让对话框消失
-                    builder.setCancelable(true);
-                    //设置正面按钮
-                    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String url = mNewsList.get(position).getSourceUrl();
-                            Uri uri = Uri.parse(url);
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            try {
-                                getContext().startActivity(intent);
-                            } catch (ActivityNotFoundException e) {
-                                e.printStackTrace();
+                mHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage("即将打开手机上的浏览器查看新闻详细内容，请问您确认要打开浏览器吗？");
+
+                        builder.setCancelable(true);
+
+                        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String url = mNewsList.get(position).getSourceUrl();
+                                Uri uri = Uri.parse(url);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                try {
+                                    getContext().startActivity(intent);
+                                } catch (ActivityNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                dialog.dismiss();
                             }
-                            dialog.dismiss();
-                        }
-                    });
-                    //设置反面按钮
-                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                        });
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        //设置对话框背景
+                        Window window = dialog.getWindow();
+                        assert window != null;
+                        window.setBackgroundDrawable(getResources().getDrawable(R.drawable.dialog_bg,null));
 
-                    AlertDialog dialog = builder.create();
+                        dialog.show();
 
-                    //显示对话框
-                    dialog.show();
+                    }
+                });
+            }
+        }
 
-                }
-            });
+        @Override
+        public int getItemViewType(int position) {
+            if ( mNewsList.size() == 0 )
+                return 1;
+            else return 0;
         }
 
         @Override
         public int getItemCount() {
-            return mNewsList.size();
+            if ( mNewsList.size() == 0 )
+                return 1;
+            else
+                return mNewsList.size();
         }
 
         public class NewsViewHolder extends RecyclerView.ViewHolder {

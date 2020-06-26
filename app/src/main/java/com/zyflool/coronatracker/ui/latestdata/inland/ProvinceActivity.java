@@ -1,11 +1,9 @@
 package com.zyflool.coronatracker.ui.latestdata.inland;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +16,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.SpriteFactory;
+import com.github.ybq.android.spinkit.Style;
+import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.zyflool.coronatracker.R;
 import com.zyflool.coronatracker.data.TimeLines;
 import com.zyflool.coronatracker.net.AreaResultResponse;
@@ -42,6 +44,7 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
     private LineChart mChart;
     private DataDisplayView mDdv;
     private TextView mTv;
+    private SpinKitView mSkv;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,29 +60,39 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
         mChart = findViewById(R.id.lc_pro);
         mDdv = findViewById(R.id.ddv_pro);
         mTv = findViewById(R.id.tv_province);
+        mSkv = findViewById(R.id.skv_province);
+        mSkv.setVisibility(View.VISIBLE);
+        Style style = Style.values()[9];
+        Sprite drawable = SpriteFactory.create(style);
+        mSkv.setIndeterminateDrawable(drawable);
+        mSkv.setColor(getResources().getColor(android.R.color.black, null));
+
+        mDdv.setFabListener(v -> initData());
 
         mTb.setTitle(Location);
-        mTb.setTitleTextColor(Color.parseColor("#ffffff"));
-        mTb.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_black_24dp);
         mTb.setNavigationOnClickListener(v -> finish());
+
+        //刚开始没有数据 不显示图表
+        mChart.setVisibility(View.INVISIBLE);
+
         if ( LocationEng.length() == 0 ) {
-            mChart.setVisibility(View.GONE);
             mTv.setVisibility(View.VISIBLE);
+            mTv.setText(R.string.no_detail_data);
+            mSkv.setVisibility(View.GONE);
         } else {
-            mChart.setVisibility(View.VISIBLE);
-            mTv.setVisibility(View.GONE);
+            mTv.setVisibility(View.VISIBLE);
+            mTv.setText(R.string.loading_data);
+            mPresenter.getData(LocationEng);
         }
 
         initData();
 
-        mPresenter.getData(LocationEng);
-
     }
 
+    //获取整体数据
     private void initData() {
-
-        NetUtil.getInstance().getApi().getArea("", Location)
-                .retry(10)
+        NetUtil.getInstance().getApi().getArea("", Location, "currentConfirmedCount")
+                .retry(5)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AreaResultResponse>() {
@@ -91,8 +104,7 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
                     @Override
                     public void onNext(AreaResultResponse areaResultResponse) {
                         Log.e("ProvinceActivity","province data Success");
-                        mDdv.setData(areaResultResponse.getResults().get(0).getUpdateTime()+"",
-                                areaResultResponse.getResults().get(0).getCurrentConfirmedCount(),
+                        mDdv.setData(areaResultResponse.getResults().get(0).getCurrentConfirmedCount(),
                                 areaResultResponse.getResults().get(0).getConfirmedCount(),
                                 areaResultResponse.getResults().get(0).getCuredCount(),
                                 areaResultResponse.getResults().get(0).getDeadCount());
@@ -102,7 +114,6 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         Log.e("ProvinceActivity","province data Fail");
-                        showError("获取数据失败，请检查网络或稍后重试");
                     }
 
                     @Override
@@ -112,8 +123,15 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
                 });
     }
 
+    //设置图表
     @Override
     public void setChart(List<List<TimeLines>> dataList) {
+        Log.e("ProvinceActivity", "setChart");
+
+        //请求成功，文字消失，显示图表
+        mChart.setVisibility(View.VISIBLE);
+        mTv.setVisibility(View.GONE);
+        mSkv.setVisibility(View.GONE);
 
         List<TimeLines> confirmedTimeline = dataList.get(0);
         List<TimeLines> deathTimeline = dataList.get(1);
@@ -129,20 +147,20 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
         LineDataSet confirmedCountSet = new LineDataSet(confirmedCount, "累计确诊人数");
         LineDataSet deathCountSet = new LineDataSet(deathCount, "累计死亡人数");
 
-        confirmedCountSet.setColor(Color.parseColor("#620F0F"));
-        confirmedCountSet.setCircleColor(Color.parseColor("#620F0F"));
-        confirmedCountSet.setCircleColors(Color.parseColor("#620F0F"));
-        confirmedCountSet.setValueTextColor(Color.parseColor("#620F0F"));
-        confirmedCountSet.setColors(Color.parseColor("#620F0F"));
+        confirmedCountSet.setColor(getResources().getColor(R.color.confirmedTextColor, null));
+        confirmedCountSet.setCircleColor(getResources().getColor(R.color.confirmedTextColor, null));
+        confirmedCountSet.setCircleColors(getResources().getColor(R.color.confirmedTextColor, null));
+        confirmedCountSet.setValueTextColor(getResources().getColor(R.color.confirmedTextColor, null));
+        confirmedCountSet.setColors(getResources().getColor(R.color.confirmedTextColor, null));
 
         confirmedCountSet.setDrawCircles(false);
 
         deathCountSet.setDrawCircles(false);
-        deathCountSet.setColors(Color.parseColor("#000000"));
-        deathCountSet.setColor(Color.parseColor("#000000"));
-        deathCountSet.setCircleColor(Color.parseColor("#000000"));
-        deathCountSet.setCircleColors(Color.parseColor("#000000"));
-        deathCountSet.setValueTextColor(Color.parseColor("#000000"));
+        deathCountSet.setColors(getResources().getColor(R.color.deathTextColor, null));
+        deathCountSet.setColor(getResources().getColor(R.color.deathTextColor, null));
+        deathCountSet.setCircleColor(getResources().getColor(R.color.deathTextColor, null));
+        deathCountSet.setCircleColors(getResources().getColor(R.color.deathTextColor, null));
+        deathCountSet.setValueTextColor(getResources().getColor(R.color.deathTextColor, null));
 
         Description description = mChart.getDescription();
         description.setText("历史数据折线图"); // 设置右下角备注
@@ -160,12 +178,21 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
             }
         });
 
+
         mChart.invalidate();
     }
 
     @Override
     public void showError(String error) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+        mTv.setText(R.string.load_data_fail);
+        mTv.setClickable(true);
+        mTv.setOnClickListener(v -> {
+            mPresenter.getData(LocationEng);
+            mTv.setClickable(false);
+            mTv.setOnClickListener(null);
+            mTv.setText(R.string.loading_data);
+            mSkv.setVisibility(View.VISIBLE);
+        });
     }
 
 }

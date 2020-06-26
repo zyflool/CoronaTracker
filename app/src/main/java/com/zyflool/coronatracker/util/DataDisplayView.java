@@ -8,12 +8,15 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zyflool.coronatracker.data.CoronaData;
 import com.zyflool.coronatracker.R;
 
+/**
+ * 普通数据显示框（国际、国内各省市）
+ */
 public class DataDisplayView extends LinearLayout {
 
-    private TextView timeTv;
     private TextView curConfirmedCountTv;
     private TextView confirmedCountTv;
     private TextView curedCountTv;
@@ -26,6 +29,7 @@ public class DataDisplayView extends LinearLayout {
     private TextView confirmedCountIncreaseTextTv;
     private TextView curedCountIncreaseTextTv;
     private TextView deathCountIncreaseTextTv;
+    private FloatingActionButton mFab;
 
     public DataDisplayView(Context context) {
         super(context);
@@ -48,8 +52,7 @@ public class DataDisplayView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.data_display_view, this, true);
-        timeTv = findViewById(R.id.tv_latest_time);
+        LayoutInflater.from(context).inflate(R.layout.view_data_display, this, true);
         curConfirmedCountTv = findViewById(R.id.tv_cur_confirmed_count_number);
         curedCountTv = findViewById(R.id.tv_cured_count_number);
         confirmedCountTv = findViewById(R.id.tv_confirmed_count_number);
@@ -62,18 +65,16 @@ public class DataDisplayView extends LinearLayout {
         confirmedCountIncreaseTextTv = findViewById(R.id.tv_confirmed_count_increase);
         curedCountIncreaseTextTv = findViewById(R.id.tv_cured_count_increase);
         deathCountIncreaseTextTv = findViewById(R.id.tv_death_count_increase);
+        mFab = findViewById(R.id.fab_data_display);
+    }
+
+    public void setFabListener(OnClickListener onClickListener) {
+        mFab.setOnClickListener(onClickListener);
     }
 
     public void setData(CoronaData data) {
 
-        String timeFormat = getResources().getString(R.string.latest_time);
         String numberFormat = getResources().getString(R.string.number);
-        String numberIncreaseFormat = getResources().getString(R.string.increase_number);
-
-        String time = data.getTime();
-        time = time.substring(0,time.length()-3);
-        time = Utils.paserTime(Long.parseLong(time));
-        timeTv.setText(String.format(timeFormat, time.substring(0,10)));
 
         curConfirmedCountTv.setText(String.format(numberFormat, data.getCurrentConfirmedCount()));
         confirmedCountTv.setText(String.format(numberFormat, data.getConfirmedCount()));
@@ -90,20 +91,26 @@ public class DataDisplayView extends LinearLayout {
         curedCountIncreaseTextTv.setVisibility(VISIBLE);
         deathCountIncreaseTextTv.setVisibility(VISIBLE);
 
-        curConfirmedCountIncreaseTv.setText(String.format(numberIncreaseFormat, data.getCurrentConfirmedIncr()));
-        confirmedCountIncreaseTv.setText(String.format(numberIncreaseFormat, data.getConfirmedIncr()));
-        curedCountIncreaseTv.setText(String.format(numberIncreaseFormat, data.getCuredIncr()));
-        deathCountIncreaseTv.setText(String.format(numberIncreaseFormat, data.getDeadIncr()));
+        setIncreaseText(curConfirmedCountIncreaseTv, data.getCurrentConfirmedIncr());
+        setIncreaseText(confirmedCountIncreaseTv, data.getConfirmedIncr());
+        setIncreaseText(curedCountIncreaseTv, data.getCuredIncr());
+        setIncreaseText(deathCountIncreaseTv, data.getDeadIncr());
 
     }
 
-    public void setData(String time, int currentConfirmedCount, int confirmedCount, int curedCount, int deadCount ) {
+    private void setIncreaseText(TextView Tv, int incr) {
+        String numberIncr = getResources().getString(R.string.increase_number);
+        String numberDecr = getResources().getString(R.string.decrease_number);
+        if ( incr >= 0 )
+            Tv.setText(String.format(numberIncr,incr));
+        else
+            Tv.setText(String.format(numberDecr,incr));
 
-        String timeFormat = getResources().getString(R.string.latest_time);
+    }
+
+    public void setData(int currentConfirmedCount, int confirmedCount, int curedCount, int deadCount ) {
+
         String numberFormat = getResources().getString(R.string.number);
-        time = time.substring(0,time.length()-3);
-        time = Utils.paserTime(Long.parseLong(time));
-        timeTv.setText(String.format(timeFormat, time.substring(0, 10)));
 
         curConfirmedCountTv.setText(String.format(numberFormat, currentConfirmedCount));
         confirmedCountTv.setText(String.format(numberFormat, confirmedCount));

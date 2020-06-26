@@ -44,6 +44,7 @@ public class MainRepository {
                     @Override
                     public void onNext(OverallResultResponse overallResultResponse) {
                         Log.e("MainRepository", "getOverall success");
+
                         OverallResultResponse.ResultsBean t = overallResultResponse.getResults().get(0);
 
                         spUtils.put("updateTime", t.getUpdateTime()+"");
@@ -52,16 +53,27 @@ public class MainRepository {
                         spUtils.put("InlandConfirmedCount", t.getConfirmedCount());
                         spUtils.put("InlandCuredCount",t.getCuredCount());
                         spUtils.put("InlandDeadCount", t.getDeadCount());
+                        spUtils.put("InlandImportedCount",t.getSuspectedCount());
+                        spUtils.put("InlandAsymptomaticCount", t.getSeriousCount());
 
                         spUtils.put("InlandCurrentConfirmedIncr", t.getCurrentConfirmedIncr());
                         spUtils.put("InlandConfirmedIncr", t.getConfirmedIncr());
                         spUtils.put("InlandCuredIncr", t.getCuredIncr());
                         spUtils.put("InlandDeadIncr", t.getDeadIncr());
+                        spUtils.put("InlandImportedIncr",t.getSuspectedIncr());
+                        spUtils.put("InlandAsymptomaticIncr", t.getSeriousIncr());
 
                         spUtils.put("WorldCurrentConfirmedCount", t.getGlobalStatistics().getCurrentConfirmedCount());
                         spUtils.put("WorldConfirmedCount", t.getGlobalStatistics().getConfirmedCount());
                         spUtils.put("WorldCuredCount",t.getGlobalStatistics().getCuredCount());
                         spUtils.put("WorldDeadCount", t.getGlobalStatistics().getDeadCount());
+
+                        spUtils.put("WorldCurrentConfirmedIncr", t.getGlobalStatistics().getCurrentConfirmedIncr());
+                        spUtils.put("WorldConfirmedIncr", t.getGlobalStatistics().getConfirmedIncr());
+                        spUtils.put("WorldCuredIncr", t.getGlobalStatistics().getCuredIncr());
+                        spUtils.put("WorldDeadIncr", t.getGlobalStatistics().getDeadIncr());
+
+
                     }
 
                     @Override

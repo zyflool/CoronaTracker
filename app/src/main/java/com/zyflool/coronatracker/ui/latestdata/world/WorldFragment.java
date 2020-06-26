@@ -6,17 +6,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zyflool.coronatracker.MainRepository;
 import com.zyflool.coronatracker.R;
+import com.zyflool.coronatracker.data.CoronaData;
 import com.zyflool.coronatracker.net.NetUtil;
 import com.zyflool.coronatracker.net.OverallResultResponse;
 import com.zyflool.coronatracker.util.AppExecutors;
@@ -39,7 +37,6 @@ public class WorldFragment extends Fragment {
     private SearchView mSv;
     private DataDisplayView mDdv;
     private View mView;
-    private FloatingActionButton mFab;
 
 
     @Override
@@ -61,16 +58,10 @@ public class WorldFragment extends Fragment {
         mView = view.findViewById(R.id.view_world);
         mSv = view.findViewById(R.id.sv_world);
         mDdv = view.findViewById(R.id.ddv_world);
-        mFab = view.findViewById(R.id.fab_world);
 
-        mFab.setOnClickListener(v -> getOverallRemote());
+        mDdv.setFabListener(v -> getOverallRemote());
 
-        mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), SearchActivity.class));
-            }
-        });
+        mView.setOnClickListener(v -> startActivity(new Intent(getContext(), SearchActivity.class)));
 
         initData();
 
@@ -78,22 +69,25 @@ public class WorldFragment extends Fragment {
     }
 
     public void initData() {
-        if ( spUtils.getString("updateTime","").length() == 0 )
+        if ( spUtils.getInt("InlandCurrentConfirmedCount",0) == 0 )
             getOverallRemote();
         else
-            mDdv.setData(spUtils.getString("updateTime"),
-                    spUtils.getInt("WorldCurrentConfirmedCount"),
-                    spUtils.getInt("WorldConfirmedCount"),
-                    spUtils.getInt("WorldCuredCount"),
-                    spUtils.getInt("WorldDeadCount"));
+            mDdv.setData(
+                    new CoronaData(spUtils.getInt("WorldCurrentConfirmedCount"),
+                            spUtils.getInt("WorldConfirmedCount"),
+                            spUtils.getInt("WorldCuredCount"),
+                            spUtils.getInt("WorldDeadCount"),
+                            spUtils.getInt("WorldCurrentConfirmedIncr"),
+                            spUtils.getInt("WorldConfirmedIncr"),
+                            spUtils.getInt("WorldCuredIncr"),
+                            spUtils.getInt("WorldDeadIncr")
+                    ));
 
         for (String s :Constants.CountryName )
             mCountryLocalDataSource.insertCountry(s);
     }
 
-    public void showError(String error) {
-        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-    }
+
 
     public void getOverallRemote() {
         NetUtil.getInstance().getApi().getOverAll()
@@ -111,23 +105,33 @@ public class WorldFragment extends Fragment {
                         OverallResultResponse.ResultsBean t =
                                 overallResultResponse.getResults().get(0);
 
+                        spUtils.put("updateTime", t.getUpdateTime());
+
                         spUtils.put("WorldCurrentConfirmedCount", t.getGlobalStatistics().getCurrentConfirmedCount());
                         spUtils.put("WorldConfirmedCount", t.getGlobalStatistics().getConfirmedCount());
                         spUtils.put("WorldCuredCount",t.getGlobalStatistics().getCuredCount());
                         spUtils.put("WorldDeadCount", t.getGlobalStatistics().getDeadCount());
 
-                        mDdv.setData(t.getUpdateTime()+"",
+                        spUtils.put("WorldCurrentConfirmedIncr", t.getGlobalStatistics().getCurrentConfirmedIncr());
+                        spUtils.put("WorldConfirmedIncr", t.getGlobalStatistics().getConfirmedIncr());
+                        spUtils.put("WorldCuredIncr", t.getGlobalStatistics().getCuredIncr());
+                        spUtils.put("WorldDeadIncr", t.getGlobalStatistics().getDeadIncr());
+
+                        mDdv.setData(new CoronaData(
                                 t.getGlobalStatistics().getCurrentConfirmedCount(),
                                 t.getGlobalStatistics().getConfirmedCount(),
                                 t.getGlobalStatistics().getCuredCount(),
-                                t.getGlobalStatistics().getDeadCount());
+                                t.getGlobalStatistics().getDeadCount(),
+                                t.getGlobalStatistics().getCurrentConfirmedIncr(),
+                                t.getGlobalStatistics().getConfirmedIncr(),
+                                t.getGlobalStatistics().getCuredIncr(),
+                                t.getGlobalStatistics().getDeadIncr()));
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         Log.e("worldFragment","data fail");
-                        showError("获取数据失败，请检查网络或稍后重试");
                     }
 
                     @Override

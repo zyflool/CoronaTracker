@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,41 +8,41 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_province"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/i_arrow_left_white_24dp"
-        app:titleTextColor="@android:color/white" />
+        app:navigationIcon="@drawable/ic_arrow_left_blue_24dp"
+        app:titleTextColor="@color/colorPrimary" />
 
     <com.zyflool.coronatracker.util.DataDisplayView
         android:id="@+id/ddv_pro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tb_province" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lc_pro"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ddv_pro" />
+        app:layout_constraintStart_toEndOf="@+id/ddv_pro"
+        app:layout_constraintTop_toBottomOf="@+id/tb_province" />
 
     <TextView
         android:id="@+id/tv_province"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/loading_data"
@@ -51,9 +50,9 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ddv_pro"
-        app:layout_constraintVertical_bias="0.06999999" />
+        app:layout_constraintStart_toEndOf="@+id/ddv_pro"
+        app:layout_constraintTop_toTopOf="@+id/lc_pro"
+        app:layout_constraintVertical_bias="0.39" />
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/skv_province"

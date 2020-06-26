@@ -10,14 +10,18 @@
     <color name="primaryDarkColor">#003c8f</color>
 
 
-    <color name="confirmedTextColor">#620F0F</color>
-    <color name="curedTextColor">#1C481E</color>
-    <color name="deathTextColor">#000000</color>
-    <color name="curConfirmedTextColor">#902A2A</color>
+    <color name="confirmedTextColor">#AE212C</color>
+    <color name="curedTextColor">#28B7A3</color>
+    <color name="deathTextColor">#5D7092</color>
+    <color name="curConfirmedTextColor">#F74C31</color>
+    <color name="importedTextColor">#F78207</color>
+    <color name="asymptomaticTextColor">#A25A4E</color>
 
-    <color name="confirmedBackColor">#2B620F0F</color>
-    <color name="curedBackColor">#2B1C481E</color>
-    <color name="deathBackColor">#2B000000</color>
-    <color name="curConfirmedBackColor">#2B902A2A</color>
+    <color name="confirmedBackColor">#2BAE212C</color>
+    <color name="curedBackColor">#2B28B7A3</color>
+    <color name="deathBackColor">#2B5D7092</color>
+    <color name="curConfirmedBackColor">#2BF74C31</color>
+    <color name="importedBackColor">#2BF78207</color>
+    <color name="asymptomaticBackColor">#2BA25A4E</color>
 
 </resources>

@@ -113,14 +113,11 @@ public class InlandFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
 
         //item点击事件
-        adapter.setOnItemClickListener(new SortAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getContext(), ProvinceActivity.class);
-                intent.putExtra("Location", adapter.getItem(position).getName());
-                intent.putExtra("LocationEng", adapter.getItem(position).getNameEng());
-                startActivity(intent);
-            }
+        adapter.setOnItemClickListener((view, position) -> {
+            Intent intent = new Intent(getContext(), ProvinceActivity.class);
+            intent.putExtra("Location", adapter.getItem(position).getName());
+            intent.putExtra("LocationEng", adapter.getItem(position).getNameEng());
+            startActivity(intent);
         });
 
     }
@@ -217,6 +214,13 @@ public class InlandFragment extends Fragment {
                                 t.getCurrentConfirmedIncr(), t.getConfirmedIncr(),
                                 t.getCuredIncr(), t.getDeadIncr(),
                                 t.getSuspectedIncr(), t.getSeriousIncr()));
+
+                        Log.e("InlandFragment", t.getCurrentConfirmedCount()+" "+
+                                        t.getConfirmedCount()+" "+ t.getCuredCount()+" "+
+                                        t.getDeadCount()+" "+t.getSuspectedCount()+" "+
+                                        t.getSeriousCount()+" "+t.getCurrentConfirmedIncr()+" "+
+                                        t.getConfirmedIncr()+" "+t.getCuredIncr()+" "+
+                                        t.getDeadIncr()+" "+ t.getSuspectedIncr()+" "+t.getSeriousIncr());
 
                     }
 

@@ -29,7 +29,6 @@ public class NewsPresenter implements NewsContract.NewsPresenter {
     public void getNews(boolean isFirstPage) {
         if ( isFirstPage )
             page = 1;
-        else page = page + 1;
 
         mRepository.getNews(page, num)
                 .retry(10)
@@ -42,7 +41,7 @@ public class NewsPresenter implements NewsContract.NewsPresenter {
 
                     @Override
                     public void onNext(List<NewsResultResponse.ResultsBean> resultsBeans) {
-                        Log.e("NewsPresenter","get remote News"+page+" success");
+                        Log.e("NewsPresenter","get remote News "+page+" success");
                         List<News> newsList = new ArrayList<>();
                         for (NewsResultResponse.ResultsBean r : resultsBeans) {
                             newsList.add(new News(r.getPubDate(), r.getTitle(), r.getSummary(),
@@ -52,6 +51,7 @@ public class NewsPresenter implements NewsContract.NewsPresenter {
                             mView.showNews(newsList);
                         else
                             mView.showMoreNews(newsList);
+                        page = page + 1;
 
                     }
 

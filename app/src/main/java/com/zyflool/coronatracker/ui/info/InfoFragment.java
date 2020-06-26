@@ -74,7 +74,7 @@ public class InfoFragment extends Fragment {
 
         mInfoTl.setupWithViewPager(mInfoVp);
         mInfoTl.getTabAt(0).setText("新闻");
-        mInfoTl.getTabAt(1).setText("谣言");
+        mInfoTl.getTabAt(1).setText("辟谣");
 
         return view;
     }

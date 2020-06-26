@@ -28,6 +28,12 @@ public class InlandDataDisplayView extends LinearLayout {
     private TextView deathCountIncreaseTv;
     private TextView importedCountIncreaseTv;
     private TextView asymptomaticCountIncreaseTv;
+    private TextView curConfirmedCountIncreaseTextTv;
+    private TextView confirmedCountIncreaseTextTv;
+    private TextView curedCountIncreaseTextTv;
+    private TextView deathCountIncreaseTextTv;
+    private TextView importedCountIncreaseTextTv;
+    private TextView asymptomaticCountIncreaseTextTv;
 
     public InlandDataDisplayView(Context context) {
         super(context);
@@ -64,6 +70,14 @@ public class InlandDataDisplayView extends LinearLayout {
         deathCountIncreaseTv = findViewById(R.id.tv_death_count_increase_number);
         importedCountIncreaseTv = findViewById(R.id.tv_imported_count_increase_number);
         asymptomaticCountIncreaseTv = findViewById(R.id.tv_asymptomatic_count_increase_number);
+
+        curConfirmedCountIncreaseTextTv = findViewById(R.id.tv_cur_confirmed_count_increase);
+        curedCountIncreaseTextTv = findViewById(R.id.tv_cured_count_increase);
+        confirmedCountIncreaseTextTv = findViewById(R.id.tv_confirmed_count_increase);
+        deathCountIncreaseTextTv = findViewById(R.id.tv_death_count_increase);
+        importedCountIncreaseTextTv = findViewById(R.id.tv_imported_count_increase);
+        asymptomaticCountIncreaseTextTv = findViewById(R.id.tv_asymptomatic_count_increase);
+
     }
 
     public void setData(CoronaData data) {
@@ -77,12 +91,47 @@ public class InlandDataDisplayView extends LinearLayout {
         importedCountTv.setText(String.format(numberFormat, data.getImportedCount()));
         asymptomaticCountTv.setText(String.format(numberFormat, data.getAsymptomaticCount()));
 
-        setIncreaseText(curConfirmedCountIncreaseTv, data.getCurrentConfirmedIncr());
-        setIncreaseText(confirmedCountIncreaseTv, data.getConfirmedIncr());
-        setIncreaseText(curedCountIncreaseTv, data.getCuredIncr());
-        setIncreaseText(deathCountIncreaseTv, data.getDeadIncr());
-        setIncreaseText(importedCountIncreaseTv, data.getImportedIncr());
-        setIncreaseText(asymptomaticCountIncreaseTv, data.getAsymptomaticIncr());
+        if ( data.getCurrentConfirmedIncr() == 0 && data.getConfirmedIncr() == 0
+                && data.getCuredIncr() == 0 && data.getDeadIncr() == 0
+                && data.getImportedIncr() == 0 && data.getAsymptomaticIncr() == 0) {
+
+            curConfirmedCountIncreaseTv.setVisibility(GONE);
+            curedCountIncreaseTv.setVisibility(GONE);
+            confirmedCountIncreaseTv.setVisibility(GONE);
+            deathCountIncreaseTv.setVisibility(GONE);
+            importedCountIncreaseTv.setVisibility(GONE);
+            asymptomaticCountIncreaseTv.setVisibility(GONE);
+
+            curConfirmedCountIncreaseTextTv.setVisibility(GONE);
+            curedCountIncreaseTextTv.setVisibility(GONE);
+            confirmedCountIncreaseTextTv.setVisibility(GONE);
+            deathCountIncreaseTextTv.setVisibility(GONE);
+            importedCountIncreaseTextTv.setVisibility(GONE);
+            asymptomaticCountIncreaseTextTv.setVisibility(GONE);
+
+        } else {
+
+            curConfirmedCountIncreaseTv.setVisibility(VISIBLE);
+            curedCountIncreaseTv.setVisibility(VISIBLE);
+            confirmedCountIncreaseTv.setVisibility(VISIBLE);
+            deathCountIncreaseTv.setVisibility(VISIBLE);
+            importedCountIncreaseTv.setVisibility(VISIBLE);
+            asymptomaticCountIncreaseTv.setVisibility(VISIBLE);
+
+            curConfirmedCountIncreaseTextTv.setVisibility(VISIBLE);
+            curedCountIncreaseTextTv.setVisibility(VISIBLE);
+            confirmedCountIncreaseTextTv.setVisibility(VISIBLE);
+            deathCountIncreaseTextTv.setVisibility(VISIBLE);
+            importedCountIncreaseTextTv.setVisibility(VISIBLE);
+            asymptomaticCountIncreaseTextTv.setVisibility(VISIBLE);
+
+            setIncreaseText(curConfirmedCountIncreaseTv, data.getCurrentConfirmedIncr());
+            setIncreaseText(confirmedCountIncreaseTv, data.getConfirmedIncr());
+            setIncreaseText(curedCountIncreaseTv, data.getCuredIncr());
+            setIncreaseText(deathCountIncreaseTv, data.getDeadIncr());
+            setIncreaseText(importedCountIncreaseTv, data.getImportedIncr());
+            setIncreaseText(asymptomaticCountIncreaseTv, data.getAsymptomaticIncr());
+        }
 
     }
 

@@ -73,9 +73,9 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
 
     @Override
     public void showRumors(List<Rumors> rumorsList) {
+        Log.e("RumorsFragment","getRumors finish");
         myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
-        Log.e("RumorsFragment","getRumors finish");
         if ( rumorsList.size() < 20 )
             myRefreshLayout.setOnLoadMoreListener(null);
         mAdapter.refreshRumors(rumorsList);
@@ -83,6 +83,7 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
 
     @Override
     public void showMoreRumors(List<Rumors> rumorsList) {
+        Log.e("RumorsFragment","getMoreRumors finish");
         myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
         if ( rumorsList.size() < 20 )
@@ -99,7 +100,7 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
 
     public class RumorsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<Rumors> mRumorsList;
+        private List<Rumors> mRumorsList = new ArrayList<>();
 
         public RumorsAdapter (List<Rumors> newsList) {
             mRumorsList = newsList;
@@ -112,9 +113,14 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
         }
 
         public void refreshRumors(List<Rumors> rumorsList) {
-            mRumorsList.clear();
+            if ( mRumorsList.size() != 0 ) {
+                int preSize = mRumorsList.size();
+                mRumorsList.clear();
+                notifyItemRangeRemoved(0, preSize);
+            } else
+                notifyItemRemoved(0);
             mRumorsList.addAll(rumorsList);
-            notifyDataSetChanged();
+            notifyItemRangeInserted(0, mRumorsList.size());
         }
 
         @NonNull
@@ -162,7 +168,8 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
         public int getItemViewType(int position) {
             if ( mRumorsList.size() == 0 )
                 return 1;
-            else return 0;
+            else
+                return 0;
         }
 
         @Override

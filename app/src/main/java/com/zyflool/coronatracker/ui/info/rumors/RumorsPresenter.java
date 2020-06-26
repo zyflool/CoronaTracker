@@ -32,7 +32,6 @@ public class RumorsPresenter implements RumorsContract.RumorsPresenter {
     public void getRumors(boolean isFirstPage) {
         if ( isFirstPage )
             page = 1;
-        else page = page + 1;
 
         mRepository.getRumors(rumorType, page, num)
                 .retry(10)
@@ -53,6 +52,7 @@ public class RumorsPresenter implements RumorsContract.RumorsPresenter {
                             mView.showRumors(rumorsList);
                         else
                             mView.showMoreRumors(rumorsList);
+                        page = page + 1;
                     }
 
                     @Override

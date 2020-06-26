@@ -81,20 +81,36 @@ public class DataDisplayView extends LinearLayout {
         curedCountTv.setText(String.format(numberFormat, data.getCuredCount()));
         deathCountTv.setText(String.format(numberFormat, data.getDeadCount()));
 
-        curConfirmedCountIncreaseTv.setVisibility(VISIBLE);
-        confirmedCountIncreaseTv.setVisibility(VISIBLE);
-        curedCountIncreaseTv.setVisibility(VISIBLE);
-        deathCountIncreaseTv.setVisibility(VISIBLE);
+        if ( data.getCurrentConfirmedIncr() == 0 && data.getConfirmedIncr() == 0
+                && data.getCuredIncr() == 0 && data.getDeadIncr() == 0) {
 
-        curConfirmedCountIncreaseTextTv.setVisibility(VISIBLE);
-        confirmedCountIncreaseTextTv.setVisibility(VISIBLE);
-        curedCountIncreaseTextTv.setVisibility(VISIBLE);
-        deathCountIncreaseTextTv.setVisibility(VISIBLE);
+            curConfirmedCountIncreaseTv.setVisibility(GONE);
+            curedCountIncreaseTv.setVisibility(GONE);
+            confirmedCountIncreaseTv.setVisibility(GONE);
+            deathCountIncreaseTv.setVisibility(GONE);
 
-        setIncreaseText(curConfirmedCountIncreaseTv, data.getCurrentConfirmedIncr());
-        setIncreaseText(confirmedCountIncreaseTv, data.getConfirmedIncr());
-        setIncreaseText(curedCountIncreaseTv, data.getCuredIncr());
-        setIncreaseText(deathCountIncreaseTv, data.getDeadIncr());
+            curConfirmedCountIncreaseTextTv.setVisibility(GONE);
+            curedCountIncreaseTextTv.setVisibility(GONE);
+            confirmedCountIncreaseTextTv.setVisibility(GONE);
+            deathCountIncreaseTextTv.setVisibility(GONE);
+
+        } else {
+
+            curConfirmedCountIncreaseTv.setVisibility(VISIBLE);
+            curedCountIncreaseTv.setVisibility(VISIBLE);
+            confirmedCountIncreaseTv.setVisibility(VISIBLE);
+            deathCountIncreaseTv.setVisibility(VISIBLE);
+
+            curConfirmedCountIncreaseTextTv.setVisibility(VISIBLE);
+            curedCountIncreaseTextTv.setVisibility(VISIBLE);
+            confirmedCountIncreaseTextTv.setVisibility(VISIBLE);
+            deathCountIncreaseTextTv.setVisibility(VISIBLE);
+
+            setIncreaseText(curConfirmedCountIncreaseTv, data.getCurrentConfirmedIncr());
+            setIncreaseText(confirmedCountIncreaseTv, data.getConfirmedIncr());
+            setIncreaseText(curedCountIncreaseTv, data.getCuredIncr());
+            setIncreaseText(deathCountIncreaseTv, data.getDeadIncr());
+        }
 
     }
 

@@ -79,7 +79,7 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
 
     @Override
     public void showNews(List<News> newsList) {
-        Log.e("NewsFragment","getRumors finish");
+        Log.e("NewsFragment","getNews finish");
         myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
         if ( newsList.size() < 20 )
@@ -89,6 +89,8 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
 
     @Override
     public void showMoreNews(List<News> newsList) {
+        Log.e("NewsFragment","getMoreNews finish");
+        myRefreshLayout.setRefreshing(false);
         myRefreshLayout.setLoading(false);
         if (newsList.size() < 20)
             myRefreshLayout.setOnLoadMoreListener(null);
@@ -104,7 +106,7 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
 
     public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<News> mNewsList;
+        private List<News> mNewsList = new ArrayList<>();
 
         public NewsAdapter (List<News> newsList) {
             mNewsList = newsList;
@@ -117,9 +119,14 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
         }
 
         public void refreshNews(List<News> newsList) {
-            mNewsList.clear();
+            if ( mNewsList.size() != 0 ) {
+                int preSize = mNewsList.size();
+                mNewsList.clear();
+                notifyItemRangeRemoved(0, preSize);
+            } else
+                notifyItemRemoved(0);
             mNewsList.addAll(newsList);
-            notifyDataSetChanged();
+            notifyItemRangeInserted(0, mNewsList.size());
         }
 
         @NonNull
@@ -128,7 +135,7 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
             if ( viewType == 1 )
                 return new ListNoItemViewHolder(
                         LayoutInflater.from(getContext()).inflate(
-                                R.layout.item_news, parent, false));
+                                R.layout.item_no_item, parent, false));
             else
                 return new NewsViewHolder(
                         LayoutInflater.from(getContext()).inflate(
@@ -191,7 +198,8 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
         public int getItemViewType(int position) {
             if ( mNewsList.size() == 0 )
                 return 1;
-            else return 0;
+            else
+                return 0;
         }
 
         @Override

@@ -30,6 +30,7 @@ public class RumorsRepository {
     public Observable<List<RumorsResultResponse.ResultsBean>> getRumors(int rumorType, int page, int num) {
         return NetUtil.getInstance().getApi().getRumors(rumorType, page, num)
                 .subscribeOn(Schedulers.io())
+                .retry(5)
                 .map(rumorsResultResponse -> rumorsResultResponse.getResults());
     }
 }

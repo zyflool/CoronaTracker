@@ -140,7 +140,7 @@ public class RumorsFragment extends Fragment implements RumorsContract.RumorsVie
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             if ( holder instanceof RumorsViewHolder ) {
                 RumorsViewHolder mHolder = (RumorsViewHolder) holder;
-                mHolder.mSummaryTv.setText(mRumorsList.get(position).getMainSummary());
+                mHolder.mSummaryTv.setText(mRumorsList.get(position).getSummary());
                 mHolder.mTitleTv.setText(mRumorsList.get(position).getTitle());
 
                 mHolder.itemView.setOnClickListener(new View.OnClickListener() {

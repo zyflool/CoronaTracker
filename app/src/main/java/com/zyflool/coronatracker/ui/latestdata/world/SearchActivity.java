@@ -126,12 +126,9 @@ public class SearchActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull SearchAdapter.MyViewHolder holder, int position) {
             holder.textView.setText(mResultList.get(position));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSv.setQuery(mResultList.get(position), false);
-                    setDdv(true, mResultList.get(position));
-                }
+            holder.itemView.setOnClickListener(v -> {
+                mSv.setQuery(mResultList.get(position), false);
+                setDdv(true, mResultList.get(position));
             });
         }
 
@@ -169,11 +166,17 @@ public class SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(List<AreaResultResponse.ResultsBean> resultsBeans) {
-                        mDdv.setVisibility(View.VISIBLE);
                         mDdv.setData(resultsBeans.get(0).getCurrentConfirmedCount(),
                                 resultsBeans.get(0).getConfirmedCount(),
                                 resultsBeans.get(0).getCuredCount(),
                                 resultsBeans.get(0).getDeadCount());
+                        Log.e("SearchActivity", resultsBeans.get(0).getCountryName()+"  "
+                                +resultsBeans.get(0).getProvinceName()+" "+
+                                resultsBeans.get(0).getCurrentConfirmedCount()+" "+
+                                resultsBeans.get(0).getConfirmedCount()+" "+
+                                resultsBeans.get(0).getCuredCount()+" "+
+                                resultsBeans.get(0).getDeadCount());
+                        mDdv.setVisibility(View.VISIBLE);
                     }
 
                     @Override

@@ -8,9 +8,9 @@ public interface RumorsContract {
 
     interface RumorsView {
 
-        void showRumors(List<Rumors> newsList);
+        void showRumors(List<Rumors> rumorsList);
 
-        void showMoreRumors(List<Rumors> newsList);
+        void showMoreRumors(List<Rumors> rumorsList);
 
         void showError(String error);
 

@@ -1,12 +1,9 @@
 package com.zyflool.coronatracker.util;
 
-import android.util.Log;
-
-import androidx.annotation.Nullable;
-
+import com.zyflool.coronatracker.data.TimeLine;
 import com.zyflool.coronatracker.data.TimeLines;
+import com.zyflool.coronatracker.net.OverallResultResponse;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,9 +25,7 @@ public class Utils {
         return times;
     }
 
-
-
-    public static List<List<TimeLines>> getDataFromJson(String json) throws JSONException {
+    public static TimeLines getDataFromJson(String json) throws JSONException {
 
         JSONObject jsonRoot = new JSONObject(json);
         JSONObject timelines = new JSONObject(jsonRoot.getJSONArray("locations")
@@ -40,11 +35,11 @@ public class Utils {
         confirmedTl = confirmedTl.substring(1,confirmedTl.length()-1);
 
         String[] confirmedTimeline = confirmedTl.split(",");
-        List<TimeLines> confirmedTlList = new ArrayList<>();
+        List<TimeLine> confirmedTlList = new ArrayList<>();
         for ( String timeline : confirmedTimeline ) {
             String[] t = timeline.split("\"");
             t[2] = t[2].substring(1);
-            confirmedTlList.add(new TimeLines(t[1].substring(5, 10), Integer.parseInt(t[2])));
+            confirmedTlList.add(new TimeLine(t[1].substring(5, 10), Integer.parseInt(t[2])));
         }
 
 
@@ -52,16 +47,42 @@ public class Utils {
         deathTl = deathTl.substring(1, deathTl.length()-1);
 
         String[] deathTimeline = deathTl.split(",");
-        List<TimeLines> deathTlList = new ArrayList<>();
+        List<TimeLine> deathTlList = new ArrayList<>();
         for ( String timeline : deathTimeline ) {
             String[] t = timeline.split("\"");
             t[2] = t[2].substring(1);
-            deathTlList.add(new TimeLines(t[1].substring(5, 10), Integer.parseInt(t[2])));
+            deathTlList.add(new TimeLine(t[1].substring(5, 10), Integer.parseInt(t[2])));
         }
 
-        List<List<TimeLines>> dataList = new ArrayList<>();
-        dataList.add(confirmedTlList);
-        dataList.add(deathTlList);
-        return dataList;
+        TimeLines timeLines = new TimeLines(confirmedTlList, deathTlList);
+        return timeLines;
     }
+
+    public static void putDataToSp(SPUtils spUtils, OverallResultResponse.ResultsBean t) {
+
+        spUtils.put("InlandCurrentConfirmedCount", t.getCurrentConfirmedCount());
+        spUtils.put("InlandConfirmedCount", t.getConfirmedCount());
+        spUtils.put("InlandCuredCount",t.getCuredCount());
+        spUtils.put("InlandDeadCount", t.getDeadCount());
+        spUtils.put("InlandImportedCount", t.getSuspectedCount());
+        spUtils.put("InlandAsymptomaticCount", t.getSeriousCount());
+
+        spUtils.put("InlandCurrentConfirmedIncr", t.getCurrentConfirmedIncr());
+        spUtils.put("InlandConfirmedIncr", t.getConfirmedIncr());
+        spUtils.put("InlandCuredIncr", t.getCuredIncr());
+        spUtils.put("InlandDeadIncr", t.getDeadIncr());
+        spUtils.put("InlandImportedIncr", t.getSuspectedIncr());
+        spUtils.put("InlandAsymptomaticIncr", t.getSeriousIncr());
+
+        spUtils.put("WorldCurrentConfirmedCount", t.getGlobalStatistics().getCurrentConfirmedCount());
+        spUtils.put("WorldConfirmedCount", t.getGlobalStatistics().getConfirmedCount());
+        spUtils.put("WorldCuredCount",t.getGlobalStatistics().getCuredCount());
+        spUtils.put("WorldDeadCount", t.getGlobalStatistics().getDeadCount());
+
+        spUtils.put("WorldCurrentConfirmedIncr", t.getGlobalStatistics().getCurrentConfirmedIncr());
+        spUtils.put("WorldConfirmedIncr", t.getGlobalStatistics().getConfirmedIncr());
+        spUtils.put("WorldCuredIncr", t.getGlobalStatistics().getCuredIncr());
+        spUtils.put("WorldDeadIncr", t.getGlobalStatistics().getDeadIncr());
+    }
+
 }

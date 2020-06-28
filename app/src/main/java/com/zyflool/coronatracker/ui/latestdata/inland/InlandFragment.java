@@ -26,6 +26,7 @@ import com.zyflool.coronatracker.ui.latestdata.sortrecyclerview.SortModel;
 import com.zyflool.coronatracker.util.Constants;
 import com.zyflool.coronatracker.util.InlandDataDisplayView;
 import com.zyflool.coronatracker.util.SPUtils;
+import com.zyflool.coronatracker.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -142,7 +143,6 @@ public class InlandFragment extends Fragment {
         return mSortList;
     }
 
-
     private void initData() {
         if ( spUtils.getInt("InlandCurrentConfirmedCount",0) == 0 )
             getRemoteOverall();
@@ -181,31 +181,7 @@ public class InlandFragment extends Fragment {
                         Log.e("InlandFragment", "get remote Overall Success");
                         OverallResultResponse.ResultsBean t = overallResultResponse.getResults().get(0);
 
-                        spUtils.put("updateTime", t.getUpdateTime()+"");
-
-                        spUtils.put("InlandCurrentConfirmedCount", t.getCurrentConfirmedCount());
-                        spUtils.put("InlandConfirmedCount", t.getConfirmedCount());
-                        spUtils.put("InlandCuredCount",t.getCuredCount());
-                        spUtils.put("InlandDeadCount", t.getDeadCount());
-                        spUtils.put("InlandImportedCount", t.getSuspectedCount());
-                        spUtils.put("InlandAsymptomaticCount", t.getSeriousCount());
-
-                        spUtils.put("InlandCurrentConfirmedIncr", t.getCurrentConfirmedIncr());
-                        spUtils.put("InlandConfirmedIncr", t.getConfirmedIncr());
-                        spUtils.put("InlandCuredIncr", t.getCuredIncr());
-                        spUtils.put("InlandDeadIncr", t.getDeadIncr());
-                        spUtils.put("InlandImportedIncr", t.getSuspectedIncr());
-                        spUtils.put("InlandAsymptomaticIncr", t.getSeriousIncr());
-
-                        spUtils.put("WorldCurrentConfirmedCount", t.getGlobalStatistics().getCurrentConfirmedCount());
-                        spUtils.put("WorldConfirmedCount", t.getGlobalStatistics().getConfirmedCount());
-                        spUtils.put("WorldCuredCount",t.getGlobalStatistics().getCuredCount());
-                        spUtils.put("WorldDeadCount", t.getGlobalStatistics().getDeadCount());
-
-                        spUtils.put("WorldCurrentConfirmedIncr", t.getGlobalStatistics().getCurrentConfirmedIncr());
-                        spUtils.put("WorldConfirmedIncr", t.getGlobalStatistics().getConfirmedIncr());
-                        spUtils.put("WorldCuredIncr", t.getGlobalStatistics().getCuredIncr());
-                        spUtils.put("WorldDeadIncr", t.getGlobalStatistics().getDeadIncr());
+                        Utils.putDataToSp(spUtils, t);
 
                         mDdv.setData(new CoronaData(
                                 t.getCurrentConfirmedCount(), t.getConfirmedCount(),
@@ -214,21 +190,13 @@ public class InlandFragment extends Fragment {
                                 t.getCurrentConfirmedIncr(), t.getConfirmedIncr(),
                                 t.getCuredIncr(), t.getDeadIncr(),
                                 t.getSuspectedIncr(), t.getSeriousIncr()));
-
-                        Log.e("InlandFragment", t.getCurrentConfirmedCount()+" "+
-                                        t.getConfirmedCount()+" "+ t.getCuredCount()+" "+
-                                        t.getDeadCount()+" "+t.getSuspectedCount()+" "+
-                                        t.getSeriousCount()+" "+t.getCurrentConfirmedIncr()+" "+
-                                        t.getConfirmedIncr()+" "+t.getCuredIncr()+" "+
-                                        t.getDeadIncr()+" "+ t.getSuspectedIncr()+" "+t.getSeriousIncr());
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         Log.e("inlandFragment","data fail");
-
+                        initData();
                     }
 
                     @Override

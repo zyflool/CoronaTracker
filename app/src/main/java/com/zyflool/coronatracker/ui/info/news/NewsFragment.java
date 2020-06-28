@@ -146,10 +146,10 @@ public class NewsFragment extends Fragment implements NewsContract.NewsView{
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             if ( holder instanceof NewsViewHolder ) {
                 NewsViewHolder mHolder = (NewsViewHolder) holder;
-                mHolder.mSourceTv.setText(mNewsList.get(position).getInfoSource());
+                mHolder.mSourceTv.setText(mNewsList.get(position).getSourceName());
                 mHolder.mSummaryTv.setText(mNewsList.get(position).getSummary());
                 mHolder.mTitleTv.setText(mNewsList.get(position).getTitle());
-                String time = mNewsList.get(position).getPubDate();
+                String time = mNewsList.get(position).getTime();
                 time = time.substring(0, time.length() - 3);
                 mHolder.mTimeTv.setText(Utils.paserTime(Long.parseLong(time)).substring(0, 10));
 

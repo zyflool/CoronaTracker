@@ -21,6 +21,7 @@ import com.zyflool.coronatracker.util.AppExecutors;
 import com.zyflool.coronatracker.util.Constants;
 import com.zyflool.coronatracker.util.DataDisplayView;
 import com.zyflool.coronatracker.util.SPUtils;
+import com.zyflool.coronatracker.util.Utils;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -93,7 +94,6 @@ public class WorldFragment extends Fragment {
         NetUtil.getInstance().getApi().getOverAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry(5)
                 .subscribe(new Observer<OverallResultResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -105,17 +105,7 @@ public class WorldFragment extends Fragment {
                         OverallResultResponse.ResultsBean t =
                                 overallResultResponse.getResults().get(0);
 
-                        spUtils.put("updateTime", t.getUpdateTime());
-
-                        spUtils.put("WorldCurrentConfirmedCount", t.getGlobalStatistics().getCurrentConfirmedCount());
-                        spUtils.put("WorldConfirmedCount", t.getGlobalStatistics().getConfirmedCount());
-                        spUtils.put("WorldCuredCount",t.getGlobalStatistics().getCuredCount());
-                        spUtils.put("WorldDeadCount", t.getGlobalStatistics().getDeadCount());
-
-                        spUtils.put("WorldCurrentConfirmedIncr", t.getGlobalStatistics().getCurrentConfirmedIncr());
-                        spUtils.put("WorldConfirmedIncr", t.getGlobalStatistics().getConfirmedIncr());
-                        spUtils.put("WorldCuredIncr", t.getGlobalStatistics().getCuredIncr());
-                        spUtils.put("WorldDeadIncr", t.getGlobalStatistics().getDeadIncr());
+                        Utils.putDataToSp(spUtils, t);
 
                         mDdv.setData(new CoronaData(
                                 t.getGlobalStatistics().getCurrentConfirmedCount(),
@@ -132,6 +122,7 @@ public class WorldFragment extends Fragment {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         Log.e("worldFragment","data fail");
+                        initData();
                     }
 
                     @Override

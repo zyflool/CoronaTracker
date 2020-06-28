@@ -21,6 +21,7 @@ import com.github.ybq.android.spinkit.SpriteFactory;
 import com.github.ybq.android.spinkit.Style;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.zyflool.coronatracker.R;
+import com.zyflool.coronatracker.data.TimeLine;
 import com.zyflool.coronatracker.data.TimeLines;
 import com.zyflool.coronatracker.net.AreaResultResponse;
 import com.zyflool.coronatracker.net.NetUtil;
@@ -125,7 +126,7 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
 
     //设置图表
     @Override
-    public void setChart(List<List<TimeLines>> dataList) {
+    public void setChart(TimeLines timeLines) {
         Log.e("ProvinceActivity", "setChart");
 
         //请求成功，文字消失，显示图表
@@ -133,8 +134,8 @@ public class ProvinceActivity extends AppCompatActivity implements ProvinceContr
         mTv.setVisibility(View.GONE);
         mSkv.setVisibility(View.GONE);
 
-        List<TimeLines> confirmedTimeline = dataList.get(0);
-        List<TimeLines> deathTimeline = dataList.get(1);
+        List<TimeLine> confirmedTimeline = timeLines.getConfirmedTimeline();
+        List<TimeLine> deathTimeline = timeLines.getDeathTimeline();
 
         List<Entry> confirmedCount = new ArrayList<>();
         List<Entry> deathCount = new ArrayList<>();

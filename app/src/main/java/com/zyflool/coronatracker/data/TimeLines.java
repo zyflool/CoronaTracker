@@ -1,29 +1,30 @@
 package com.zyflool.coronatracker.data;
 
+import java.util.List;
+
 public class TimeLines {
+    private List<TimeLine> confirmedTimeline;
+    private List<TimeLine> deathTimeline;
 
-    private String time;
-    private int num;
-
-    public TimeLines(String time, int num) {
-        this.time = time;
-        this.num = num;
+    public TimeLines(List<TimeLine> confirmedTimeline, List<TimeLine> deathTimeline) {
+        this.confirmedTimeline = confirmedTimeline;
+        this.deathTimeline = deathTimeline;
     }
 
-    public String getTime() {
-        return time;
+    public List<TimeLine> getConfirmedTimeline() {
+        return confirmedTimeline;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setConfirmedTimeline(List<TimeLine> confirmedTimeline) {
+        this.confirmedTimeline = confirmedTimeline;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setDeathTimeline(List<TimeLine> deathTimeline) {
+        this.deathTimeline = deathTimeline;
     }
 
-    public int getNum() {
-        return num;
+    public List<TimeLine> getDeathTimeline() {
+        return deathTimeline;
     }
 
 }

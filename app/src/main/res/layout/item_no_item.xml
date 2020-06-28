@@ -19,6 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="暂时找不到内容，请尝试刷新或检查网络连接" />
+        android:text="暂时找不到内容，请尝试下拉刷新或检查网络连接" />
 
 </LinearLayout>
